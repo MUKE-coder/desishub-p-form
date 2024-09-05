@@ -1,7 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import React, { useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,7 +15,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const kpis = [
+interface KPI {
+  name: string;
+  explanation: string;
+  example: string;
+}
+
+interface FormData {
+  name: string;
+  role: string;
+  kpiScores: { [key: string]: string };
+  attendance: boolean;
+  timeIn: string;
+  timeOut: string;
+  notes: string;
+}
+
+const kpis: KPI[] = [
   {
     name: "Task Completion Rate",
     explanation:
@@ -74,7 +89,8 @@ const kpis = [
   },
 ];
 
-const PerformanceTrackingForm = () => {
+const PerformanceTrackingForm: React.FC = () => {
+  const componentRef = useRef<HTMLDivElement>(null);
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
     weekday: "long",
@@ -83,7 +99,7 @@ const PerformanceTrackingForm = () => {
     day: "numeric",
   });
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     role: "",
     kpiScores: {},
@@ -112,35 +128,18 @@ const PerformanceTrackingForm = () => {
     alert("Form submitted successfully!");
   };
 
-  const downloadPDF = () => {
-    const input = document.getElementById("performanceForm");
-    if (input) {
-      html2canvas(input).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-        const imgX = (pdfWidth - imgWidth * ratio) / 2;
-        const imgY = 30;
-        pdf.addImage(
-          imgData,
-          "PNG",
-          imgX,
-          imgY,
-          imgWidth * ratio,
-          imgHeight * ratio
-        );
-        pdf.save("daily_performance_tracking_form.pdf");
-      });
-    }
-  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Daily_Performance_Tracking_Form",
+  });
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      <div id="performanceForm" className="bg-white shadow-lg rounded-lg p-6">
+      <div
+        id="performanceForm"
+        ref={componentRef}
+        className="bg-white shadow-lg rounded-lg p-6"
+      >
         <h1 className="text-3xl font-bold mb-2 text-center text-blue-600">
           Daily Performance Tracking
         </h1>
@@ -217,10 +216,10 @@ const PerformanceTrackingForm = () => {
             <Checkbox
               id="attendance"
               checked={formData.attendance}
-              onCheckedChange={(checked) =>
+              onCheckedChange={(checked: boolean) =>
                 setFormData((prevState) => ({
                   ...prevState,
-                  attendance: !!checked,
+                  attendance: checked,
                 }))
               }
             />
@@ -261,19 +260,15 @@ const PerformanceTrackingForm = () => {
             rows={4}
           />
         </div>
+      </div>
 
-        <div className="flex justify-between">
-          <Button onClick={handleSubmit} className="w-1/2 mr-2">
-            Submit
-          </Button>
-          <Button
-            onClick={downloadPDF}
-            className="w-1/2 ml-2"
-            variant="outline"
-          >
-            Download PDF
-          </Button>
-        </div>
+      <div className="flex justify-between mt-6">
+        <Button onClick={handleSubmit} className="w-1/2 mr-2">
+          Submit
+        </Button>
+        <Button onClick={handlePrint} className="w-1/2 ml-2" variant="outline">
+          Download PDF
+        </Button>
       </div>
     </div>
   );
