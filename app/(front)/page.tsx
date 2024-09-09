@@ -8,7 +8,7 @@ export default function Home() {
       <div className="text-center">
         <BoldHeading heading="Desishub Daily Performance Report" />
       </div>
-      <div className="py-8">
+      <div className="py-8 px-0">
         <PerformanceTrackingForm />
       </div>
     </main>
