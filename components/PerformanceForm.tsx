@@ -18,12 +18,14 @@ import FormSelectInput from "./formInputs/selectInput";
 import UserPop from "./userpop";
 import { getMembers } from "@/Actions/memberActions";
 import { getRoles } from "@/Actions/roleActions";
+import { createFormData } from "@/Actions/trackingFormActions";
 
 interface KPI {
   name: string;
   explanation: string;
   example: string;
 }
+
 
 interface FormData {
   name: string;
@@ -95,18 +97,7 @@ const kpis: KPI[] = [
   },
 ];
 
-const users =[
-  {
-    id:"1",
-    title:"Look"
-  }
-]
-const roles =[
-  {
-    id:"1",
-    title:"update"
-  }
-]
+
 
 const PerformanceTrackingForm: React.FC = () => {
   const componentRef = useRef<HTMLDivElement>(null);
@@ -144,16 +135,25 @@ const PerformanceTrackingForm: React.FC = () => {
     }));
   };
 
-
-
-  const handleSubmit = () => {
+  const  handleSubmit = async () => {
     formData.name = selectedMember.label
     formData.role = selectedRole.label
     formData.userId =selectedMember.value
     formData.roleId = selectedRole.value 
+
     console.log("Form submitted:", formData);
-    alert("Form submitted successfully!");
+   
+    try {
+     const dataCreated = await createFormData(formData)
+     console.log(dataCreated)
+     alert("data created successfully!");   
+    } catch (error) {
+      console.log(error)
+      alert("failed to create"); 
+    }
   };
+  
+  
   const [selectedMember, setSelectedMember] = useState<any>("");
   const [members, setMembers] = useState<any>([]);
   useEffect(() => {
@@ -180,7 +180,7 @@ useEffect(()=>{
     // console.log(fetchedRoles)
     if(Array.isArray(fetchedRoles) && fetchedRoles.length > 0){
       setRoles(fetchedRoles)
-      console.log(fetchedRoles)
+      // console.log(fetchedRoles)
     }
   }
 fetchRoles()

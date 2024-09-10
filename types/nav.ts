@@ -23,3 +23,15 @@ export type MemberProps={
   name:string
   slug : string
 }
+
+export type FormProps={
+  name: string;
+  role: string;
+  kpiScores: { [key: string]: string };
+  attendance: boolean;
+  timeIn: string;
+  timeOut: string;
+  notes: string;
+  userId: string;
+  roleId: string
+}
