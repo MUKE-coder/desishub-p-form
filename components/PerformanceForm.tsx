@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import FormSelectInput from "./formInputs/selectInput";
+import UserPop from "./userpop";
+import { getMembers } from "@/Actions/memberActions";
+import { getRoles } from "@/Actions/roleActions";
 
 interface KPI {
   name: string;
@@ -29,6 +33,8 @@ interface FormData {
   timeIn: string;
   timeOut: string;
   notes: string;
+  userId: string;
+  roleId: string
 }
 
 const kpis: KPI[] = [
@@ -89,6 +95,19 @@ const kpis: KPI[] = [
   },
 ];
 
+const users =[
+  {
+    id:"1",
+    title:"Look"
+  }
+]
+const roles =[
+  {
+    id:"1",
+    title:"update"
+  }
+]
+
 const PerformanceTrackingForm: React.FC = () => {
   const componentRef = useRef<HTMLDivElement>(null);
   const today = new Date();
@@ -107,6 +126,8 @@ const PerformanceTrackingForm: React.FC = () => {
     timeIn: "",
     timeOut: "",
     notes: "",
+    userId:"",
+    roleId:""
   });
 
   const handleInputChange = (
@@ -123,10 +144,54 @@ const PerformanceTrackingForm: React.FC = () => {
     }));
   };
 
+
+
   const handleSubmit = () => {
+    formData.name = selectedMember.label
+    formData.role = selectedRole.label
+    formData.userId =selectedMember.value
+    formData.roleId = selectedRole.value 
     console.log("Form submitted:", formData);
     alert("Form submitted successfully!");
   };
+  const [selectedMember, setSelectedMember] = useState<any>("");
+  const [members, setMembers] = useState<any>([]);
+  useEffect(() => {
+    async function fetchMembers() {
+      const fetchedMembers = await getMembers();
+      if (fetchedMembers) {
+        setMembers(fetchedMembers);
+        
+      }
+    }
+    fetchMembers();
+  }, []);
+
+  const selectUser = members.map((member:any) => ({
+    value: member.id,
+    label: member.name, // Assuming the user object has a 'name' field
+  }));
+
+const [roles, setRoles] = useState<any>([])
+const [selectedRole, setSelectedRole] = useState<any>("");
+useEffect(()=>{
+  async function fetchRoles(){
+    const fetchedRoles = await getRoles()
+    // console.log(fetchedRoles)
+    if(Array.isArray(fetchedRoles) && fetchedRoles.length > 0){
+      setRoles(fetchedRoles)
+      console.log(fetchedRoles)
+    }
+  }
+fetchRoles()
+}, [])
+
+const selectRole = roles.map((role: any) => ({
+  value: role.id, 
+  label: role.name, 
+}));
+
+
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -149,18 +214,18 @@ const PerformanceTrackingForm: React.FC = () => {
 
         <div className="grid grid-cols-2 gap-6 mb-6">
           <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Enter name"
-            />
+               <FormSelectInput
+     label="name"
+    
+     options={selectUser}
+     option={selectedMember}
+     setOption={setSelectedMember}
+     toolTipText="Add New member"
+     href="/add-user"
+   />
           </div>
           <div>
-            <Label htmlFor="role">Role</Label>
+            {/* <Label htmlFor="role">Role</Label>
             <Input
               type="text"
               id="role"
@@ -168,7 +233,15 @@ const PerformanceTrackingForm: React.FC = () => {
               value={formData.role}
               onChange={handleInputChange}
               placeholder="Enter role"
-            />
+            /> */}
+              <FormSelectInput
+     label="role"
+     options={selectRole}
+     option={selectedRole}
+     setOption={setSelectedRole}
+     toolTipText="Add New Role"
+     href="/add-role"
+   />
           </div>
         </div>
 
@@ -274,4 +347,4 @@ const PerformanceTrackingForm: React.FC = () => {
   );
 };
 
-export default PerformanceTrackingForm;
+export default  PerformanceTrackingForm;
