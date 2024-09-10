@@ -7,11 +7,14 @@ import { useForm } from 'react-hook-form'
 import { MemberProps } from '@/types/nav'
 import { createRole } from '@/Actions/roleActions'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
+
 
 export default function AddRole() {
 const {register,reset,handleSubmit,formState:{errors}} = useForm<MemberProps>()
 const [loading,setLoading] = useState(false)
 const [roleErr,setRoleErr]  = useState("")
+const router = useRouter()
 
 async function submitRole(data:MemberProps){
   data.slug = data.name.trim().split(" ").join("-").toLowerCase()
@@ -24,6 +27,8 @@ try {
    reset()
  } else if(res && res.status === 201){
     toast.success("Role saved successfully.")
+    router.push("/")
+    router.refresh()
     reset()
  }  
 } catch (error) {

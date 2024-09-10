@@ -26,7 +26,7 @@ export async function createMember(data: MemberProps) {
         slug
     }
    }) 
-   console.log(createdMember)
+  //  console.log(createdMember)
 return{
     data:createdMember,
     error:null,
