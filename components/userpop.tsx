@@ -16,11 +16,13 @@ import SubmitButton from "./formInputs/submitButton";
 import { MemberProps } from "@/types/nav";
 import { createMember } from "@/Actions/memberActions";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function UserForm() {
   const [loading,setLoading]= useState(false)
   const {register,reset,handleSubmit,formState:{errors}}= useForm<MemberProps>()
   const [createErr, setCreateErr] = useState("")
+  const router = useRouter()
 
 async function submitMember(data:MemberProps){
   data.slug = data.name.trim().split(" ").join("-").toLowerCase()
@@ -31,6 +33,8 @@ if (res && res.status === 409){
   setCreateErr("the member already exists") 
   } else if (res && res.status== 201){
     toast.success("Member saved successfully.")
+    router.push("/")
+    router.refresh()
     reset()
   }
 } catch (error) {
