@@ -6,7 +6,7 @@ import Image from "next/image";
 export default async function Home() {
   
   return (
-    <main className="p-8">
+    <main className="">
       <div className="text-center">
         <BoldHeading heading="Desishub Daily Performance Report" />
       </div>

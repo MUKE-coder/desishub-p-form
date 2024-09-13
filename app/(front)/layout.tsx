@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="px-8 py-8">
+    <div className="lg:px-8 md:px-6 px-2 lg:py-8 md:py-6 py-4">
       {/* <SiteHeader /> */}
       {children}
     </div>
