@@ -144,7 +144,7 @@ const PerformanceTrackingForm: React.FC = () => {
     const today = new Date();
     const dayName = daysOfWeek[today.getDay()];
     
-    // console.log("Today is:", dayName);
+  
     formData.name = selectedMember.label
     formData.role = selectedRole.label
     formData.userId =selectedMember.value
@@ -243,20 +243,20 @@ const selectRole = roles.map((role: any) => ({
   });
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="container container-media lg:mx-auto md:mx-0 mx-0 lg:p-6 md:p-4 p-4 lg:max-w-6xl md:max-w-full max-w-full">
       <div
         id="performanceForm"
         ref={componentRef}
-        className="bg-white shadow-lg rounded-lg p-6"
+        className="bg-white shadow-lg rounded-lg lg:p-6 md:p-4 p-4"
       >
-        <h1 className="text-3xl font-bold mb-2 text-center text-blue-600">
+        <h1 className="lg:text-3xl md:text-2xl text-[1.1rem] font-bold mb-2 text-center text-blue-600">
           Daily Performance Tracking
         </h1>
         <h2 className="text-xl font-bold mb-6 text-center text-blue-500">
           {formattedDate}
         </h2>
 
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid lg:grid-cols-2 md:grid-cols-1 grid-cols-1 gap-6 mb-6">
           <div>
                <FormSelectInput
      label="name"
@@ -322,7 +322,7 @@ const selectRole = roles.map((role: any) => ({
           </Table>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mb-6">
           <div className="flex items-center">
             <Checkbox
               id="attendance"
