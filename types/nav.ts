@@ -17,21 +17,21 @@ export interface NavItemWithChildren extends NavItem {
 export interface MainNavItem extends NavItem {}
 
 export interface SidebarNavItem extends NavItemWithChildren {}
-  
 
-export type MemberProps={
-  name:string
-  slug : string
-}
+export type MemberProps = {
+  name: string;
+  slug: string;
+};
 
-export type FormProps={
+export type FormProps = {
   name: string;
   role: string;
+  day: string;
   kpiScores: { [key: string]: string };
   attendance: boolean;
   timeIn: string;
   timeOut: string;
   notes: string;
   userId: string;
-  roleId: string
-}
+  roleId: string;
+};

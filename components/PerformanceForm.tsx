@@ -19,6 +19,8 @@ import UserPop from "./userpop";
 import { getMembers } from "@/Actions/memberActions";
 import { getRoles } from "@/Actions/roleActions";
 import { createFormData } from "@/Actions/trackingFormActions";
+import toast from "react-hot-toast";
+import { Loader } from "lucide-react";
 
 interface KPI {
   name: string;
@@ -30,6 +32,7 @@ interface KPI {
 interface FormData {
   name: string;
   role: string;
+  day: string;
   kpiScores: { [key: string]: string };
   attendance: boolean;
   timeIn: string;
@@ -112,6 +115,7 @@ const PerformanceTrackingForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     role: "",
+    day:"",
     kpiScores: {},
     attendance: false,
     timeIn: "",
@@ -134,22 +138,31 @@ const PerformanceTrackingForm: React.FC = () => {
       kpiScores: { ...prevState.kpiScores, [kpi]: value },
     }));
   };
-
+const [loading,setLoading] = useState(false)
   const  handleSubmit = async () => {
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const today = new Date();
+    const dayName = daysOfWeek[today.getDay()];
+    
+    // console.log("Today is:", dayName);
     formData.name = selectedMember.label
     formData.role = selectedRole.label
     formData.userId =selectedMember.value
-    formData.roleId = selectedRole.value 
-
+    formData.roleId = selectedRole.value
+    formData.day =dayName
+  
     console.log("Form submitted:", formData);
    
     try {
+      setLoading(true)
      const dataCreated = await createFormData(formData)
      console.log(dataCreated)
-     alert("data created successfully!");   
+     toast.success("data created successfully!");   
     } catch (error) {
       console.log(error)
-      alert("failed to create"); 
+      toast.error("failed to create"); 
+    }finally{
+      setLoading(false)
     }
   };
   
@@ -336,9 +349,13 @@ const selectRole = roles.map((role: any) => ({
       </div>
 
       <div className="flex justify-between mt-6">
-        <Button onClick={handleSubmit} className="w-1/2 mr-2">
+        {
+          loading ?( <Button disabled onClick={handleSubmit} className="w-1/2 mr-2 flex gap-2 items-center">
+           <Loader className="animate-spin"/><span> Submiting...</span>
+        </Button>) : (<Button onClick={handleSubmit} className="w-1/2 mr-2">
           Submit
-        </Button>
+        </Button>)
+        }
         <Button onClick={handlePrint} className="w-1/2 ml-2" variant="outline">
           Download PDF
         </Button>

@@ -17,6 +17,7 @@ model FormData {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   role       String
+  day        String?
   attendance Boolean? @default(false)
   timeIn     String
   timeOut    String
