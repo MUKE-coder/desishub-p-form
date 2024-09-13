@@ -15,7 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import FormSelectInput from "./formInputs/selectInput";
-import UserPop from "./userpop";
 import { getMembers } from "@/Actions/memberActions";
 import { getRoles } from "@/Actions/roleActions";
 import { createFormData } from "@/Actions/trackingFormActions";
@@ -138,7 +137,8 @@ const PerformanceTrackingForm: React.FC = () => {
       kpiScores: { ...prevState.kpiScores, [kpi]: value },
     }));
   };
-const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState(false)
+  const [formErr,setFormErr] = useState("")
   const  handleSubmit = async () => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const today = new Date();
@@ -150,17 +150,48 @@ const [loading,setLoading] = useState(false)
     formData.userId =selectedMember.value
     formData.roleId = selectedRole.value
     formData.day =dayName
-  
-    console.log("Form submitted:", formData);
    
     try {
       setLoading(true)
-     const dataCreated = await createFormData(formData)
-     console.log(dataCreated)
-     toast.success("data created successfully!");   
+     const res = await createFormData(formData)
+      if(res && res.status===409){
+        toast.error("Report with this name was already created today. Check your records!")
+        setFormErr("Report with this name was already created today. Check your records!")
+        setSelectedMember("");
+      } else if(res && res.status===201){
+        toast.success("Report created successfully!"); 
+        setFormData({
+          name: "",
+          role: "",
+          day: "",
+          kpiScores: {},
+          attendance: false,
+          timeIn: "",
+          timeOut: "",
+          notes: "",
+          userId: "",
+          roleId: ""
+        });
+        setSelectedMember("");
+        setSelectedRole("");
+      }
     } catch (error) {
       console.log(error)
-      toast.error("failed to create"); 
+      toast.error("failed to create the report. Please try again.");
+      setFormData({
+        name: "",
+        role: "",
+        day: "",
+        kpiScores: {},
+        attendance: false,
+        timeIn: "",
+        timeOut: "",
+        notes: "",
+        userId: "",
+        roleId: ""
+      });
+      setSelectedMember("");
+      setSelectedRole(""); 
     }finally{
       setLoading(false)
     }
@@ -236,18 +267,12 @@ const selectRole = roles.map((role: any) => ({
      toolTipText="Add New member"
      href="/add-user"
    />
+    {formErr && (
+              <span className="text-xs my-2 text-red-600">{formErr}</span>
+          )}
           </div>
           <div>
-            {/* <Label htmlFor="role">Role</Label>
-            <Input
-              type="text"
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-              placeholder="Enter role"
-            /> */}
-              <FormSelectInput
+       <FormSelectInput
      label="role"
      options={selectRole}
      option={selectedRole}

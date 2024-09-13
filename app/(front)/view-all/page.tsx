@@ -1,10 +1,9 @@
-import DailyReport from '@/components/viewAllDailyReports'
 import React from 'react'
 
 export default function page() {
   return (
     <div>
-      <DailyReport/>
+      <p>Hey there this is the detailed page</p>
     </div>
   )
 }

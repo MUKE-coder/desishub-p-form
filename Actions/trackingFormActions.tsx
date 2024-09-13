@@ -16,6 +16,24 @@ export async function createFormData(formData: FormProps) {
       userId,
       roleId,
     } = formData;
+
+    // Check if a report already exists for this user on this day
+    const existingReport = await db.formData.findFirst({
+      where: {
+        userId: userId,
+        day: day,
+      },
+    });
+
+    if (existingReport) {
+      return { 
+        error: "A report for this user on this day already exists.",
+        data:null,
+         status:409
+       };
+    }
+
+    // If no existing report, create a new one
     const createdData = await db.formData.create({
       data: {
         name,
@@ -30,10 +48,17 @@ export async function createFormData(formData: FormProps) {
         roleId,
       },
     });
-    console.log(createdData);
-    return createdData;
+
+    console.log("Created data:", createdData);
+    return { 
+      success: true, 
+      data: createdData,
+      error:null,
+      status:201
+     };
   } catch (error) {
-    console.log(error);
+    console.error("Error creating form data:", error);
+    return { error: "An error occurred while creating the report." };
   }
 }
 
