@@ -27,7 +27,35 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster
-            position="top-right"
+        toastOptions={{
+          className: 'rounded-lg shadow-lg',
+          style: {
+            background: 'linear-gradient(135deg,#16a34a, #84cc16)',
+            color: '#ffffff',
+            padding: '9px 20px',
+            maxWidth: '350px',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '13.5px',
+            border: 'none',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#ffffff',
+              secondary: '#4CAF50',
+            },
+          },
+          error: {
+            style: {
+              background: 'linear-gradient(135deg, #dc2626, #dc2626)',
+            },
+            iconTheme: {
+              primary: '#ffffff',
+              secondary: '#f44336',
+            },
+          },
+          }}
+            position="bottom-right"
             reverseOrder={false}
           />
           {children}

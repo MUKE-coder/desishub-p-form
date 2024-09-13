@@ -37,8 +37,12 @@ const ActionsCell = ({ order }: { order: any }) => {
   );
 };
 
-const getAttendanceForDay = (person: any, day: any) => {
-  if (person.day.toLowerCase() === day.toLowerCase()) {
+const getAttendanceForDay = (person: any | any[], day: string) => {
+  const checkAttendance = (item: any) => item.day.toLowerCase() === day.toLowerCase();
+  const hasAttended = Array.isArray(person)
+  ? person.some(checkAttendance)
+  : checkAttendance(person);
+  if(hasAttended){
     return (
       <div className="relative">
         <span className="font-medium text-sm text-green-600">Attendend</span>
@@ -57,6 +61,28 @@ const getAttendanceForDay = (person: any, day: any) => {
       </div>
     );
   }
+
+
+  // if ((item: any) => item.day.toLowerCase() === day.toLowerCase()) {
+ 
+  //   return (
+  //     <div className="relative">
+  //       <span className="font-medium text-sm text-green-600">Attendend</span>
+  //       <TooltipProvider>
+  //         <Tooltip>
+  //           <TooltipTrigger className="absolute top-[-65%] right-[52%]">
+  //             <Link href="#">
+  //               <SquareArrowOutUpRight className="w-4 h-4" />
+  //             </Link>
+  //           </TooltipTrigger>
+  //           <TooltipContent>
+  //             <p>View report Details</p>
+  //           </TooltipContent>
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //     </div>
+  //   );
+  // }
   return (
     <div>
       <span className="text-red-400 text-sm">No Report</span>
@@ -95,29 +121,29 @@ export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "monday",
     header: ({ column }) => <SortableColumn column={column} title="Monday" />,
-    cell: ({ row }) => getAttendanceForDay(row.original, "Monday"),
+    cell: ({ row }) =>getAttendanceForDay(row.original.reports || row.original, "Monday"),
   },
   {
     accessorKey: "tuesday",
     header: ({ column }) => <SortableColumn column={column} title="Tuesday" />,
-    cell: ({ row }) => getAttendanceForDay(row.original, "Tuesday"),
+    cell: ({ row }) => getAttendanceForDay(row.original.reports || row.original, "Tuesday"),
   },
   {
     accessorKey: "wednesday",
     header: ({ column }) => (
       <SortableColumn column={column} title="Wednesday" />
     ),
-    cell: ({ row }) => getAttendanceForDay(row.original, "Wednesday"),
+    cell: ({ row }) => getAttendanceForDay(row.original.reports || row.original, "Wednesday"),
   },
   {
     accessorKey: "thursday",
     header: ({ column }) => <SortableColumn column={column} title="Thursday" />,
-    cell: ({ row }) => getAttendanceForDay(row.original, "Thursday"),
+    cell: ({ row }) =>  getAttendanceForDay(row.original.reports || row.original, "Thursday"),
   },
   {
     accessorKey: "friday",
     header: ({ column }) => <SortableColumn column={column} title="Friday" />,
-    cell: ({ row }) => getAttendanceForDay(row.original, "Friday"),
+    cell: ({ row }) => getAttendanceForDay(row.original.reports || row.original, "Friday"),
   },
   // {
   //   id: "actions",
@@ -176,3 +202,8 @@ const EnhancedWeeklyAttendanceTable = ({ data }: any) => {
 };
 
 export default EnhancedWeeklyAttendanceTable;
+ 
+
+
+
+
