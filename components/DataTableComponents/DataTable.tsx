@@ -84,7 +84,7 @@ export default function DataTable<TData, TValue>({
   // console.log(searchResults);
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center gap-8">
+      <div className="flex justify-between items-center gap-4">
         <div className="flex-1 w-full">
           <SearchBar
             data={data}
@@ -94,34 +94,17 @@ export default function DataTable<TData, TValue>({
         </div>
         <div className="flex items-center gap-2 ">
           <DateRangeFilter
+          className="lg:block md:hidden hidden"
             data={data}
             onFilter={setFilteredData}
             setIsSearch={setIsSearch}
           />
-          <DateFilters
+          <DateFilters 
             data={data}
             onFilter={setFilteredData}
             setIsSearch={setIsSearch}
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1">
-                <ListFilter className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Filter
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem checked>
-                Active
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        
           <DataTableViewOptions table={table} />
         </div>
       </div>

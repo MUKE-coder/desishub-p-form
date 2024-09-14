@@ -111,3 +111,21 @@ export async function allFormData() {
     throw new Error("Failed to fetch filtered form data");
   }
 }
+
+export async function getSingleData({id}:FormData | any){
+  try {
+   const fetchedData = await db.formData.findUnique({
+    where:{
+      id:id
+    },
+    include: {
+      User: true,
+      Role: true,
+    },
+   }) 
+   console.log(fetchedData)
+  return fetchedData
+  } catch (error) {
+    console.log(error)
+  }
+}

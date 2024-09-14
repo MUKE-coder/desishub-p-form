@@ -74,14 +74,17 @@
     @apply bg-background text-foreground;
   }
 }
- 
-@media(max-width:768px){
-  .container-media{
+
+@media (max-width: 768px) {
+  .container-media {
     width: 100%;
     margin-right: auto;
     margin-left: auto;
-    padding-right: 1rem ;
-    padding-left: 1rem ;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    max-width: 100%;
   }
-
+  .page-media {
+    display: none;
+  }
 }

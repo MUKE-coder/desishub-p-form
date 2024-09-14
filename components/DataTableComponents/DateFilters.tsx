@@ -56,7 +56,7 @@ export default function DateFilters({
   return (
     <div>
       <Select
-        value={selectedFilter}
+            value={selectedFilter}
         onChange={handleChange}
         options={options}
         primaryColor={"indigo"}
