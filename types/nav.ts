@@ -26,7 +26,7 @@ export type MemberProps = {
 export type FormProps = {
   name: string;
   role: string;
-  day: string;
+  day: string | null;
   kpiScores: { [key: string]: string };
   attendance: boolean;
   timeIn: string;

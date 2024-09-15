@@ -123,7 +123,7 @@ export async function getSingleData({id}:FormData | any){
       Role: true,
     },
    }) 
-   console.log(fetchedData)
+
   return fetchedData
   } catch (error) {
     console.log(error)
