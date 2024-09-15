@@ -5,26 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortableColumn from "@/components/DataTableColumns/SortableColumn";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import {
-  MoreHorizontal,
   PrinterIcon,
-  SquareArrowOutUpRight,
 } from "lucide-react";
 import Link from "next/link";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 
 const ActionsCell = ({ order }: { order: any }) => {
   const editEndpoint = `orders/${order.orderNumber}`;
@@ -44,45 +28,16 @@ const getAttendanceForDay = (person: any | any[], day: string) => {
   : checkAttendance(person);
   if(hasAttended){
     return (
-      <div className="relative">
-        <span className="font-medium text-sm text-green-600">Attendend</span>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger className="absolute top-[-65%] right-[0%]">
-              <Link href={`/view-details/${person.id}`}>
-                <SquareArrowOutUpRight className="w-4 h-4" />
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>View report Details</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="">
+        <span className="font-medium text-sm text-green-600">
+          <Link href={`/view-details/${person.id}`}>Full Report</Link>
+        </span>
       </div>
     );
   }
 
 
-  // if ((item: any) => item.day.toLowerCase() === day.toLowerCase()) {
- 
-  //   return (
-  //     <div className="relative">
-  //       <span className="font-medium text-sm text-green-600">Attendend</span>
-  //       <TooltipProvider>
-  //         <Tooltip>
-  //           <TooltipTrigger className="absolute top-[-65%] right-[52%]">
-  //             <Link href="#">
-  //               <SquareArrowOutUpRight className="w-4 h-4" />
-  //             </Link>
-  //           </TooltipTrigger>
-  //           <TooltipContent>
-  //             <p>View report Details</p>
-  //           </TooltipContent>
-  //         </Tooltip>
-  //       </TooltipProvider>
-  //     </div>
-  //   );
-  // }
+
   return (
     <div>
       <span className="text-red-400 text-sm">No Report</span>

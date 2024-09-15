@@ -33,8 +33,8 @@ export default function DateRangeFilter({
     console.log(selectedDate);
     setDate(selectedDate);
     setIsSearch(false);
-    const startDate = selectedDate.from;
-    const endDate = selectedDate.to;
+    const startDate = selectedDate?.from;
+    const endDate = selectedDate?.to;
     const filteredData = filterByDateRange(data, startDate, endDate);
     onFilter(filteredData);
   };

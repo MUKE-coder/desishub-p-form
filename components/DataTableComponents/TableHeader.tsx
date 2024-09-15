@@ -11,7 +11,7 @@ import { generateSlug } from "@/lib/generateSlug";
 // import { createBulkVehicles } from "@/actions/vehicles";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { ArrowBigLeft, PlusCircle } from "lucide-react";
 
 type TableHeaderProps = {
   title: string;
@@ -165,8 +165,8 @@ export default function TableHeader({
 
           <Button size="sm" asChild className="h-8 gap-1">
             <Link href={href}>
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+            <ArrowBigLeft className="h-3.5 w-3.5"/>
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 {linkTitle}
               </span>
             </Link>
