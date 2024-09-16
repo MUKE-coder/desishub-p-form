@@ -14,17 +14,17 @@ export default async function page() {
         <div className="text-center">
           <BoldHeading heading="Desishub Daily Performance Report" />
         </div>
-        <h1 className="text-3xl font-bold mb-2 text-center text-blue-600">
+        <h1 className="lg:text-3xl md:text-2xl text-[1.1rem] font-bold mb-2 text-center text-blue-600">
           Daily Performance Tracking
         </h1>
       </div>
 
-       <div className="p-8">
+       <div className="lg:p-8 md:p-4 p-2">
       <TableHeader
         title="All Users"
         model="users"
-        linkTitle="Add User"
-        href="adduser"
+        linkTitle="Back to form"
+        href="/"
         data={dataFetched}
       />
       <DataTable columns={columns} data={dataFetched} />

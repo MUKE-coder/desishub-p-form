@@ -48,8 +48,8 @@ const getAttendanceForDay = (person: any | any[], day: string) => {
         <span className="font-medium text-sm text-green-600">Attendend</span>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger className="absolute top-[-65%] right-[52%]">
-              <Link href="#">
+            <TooltipTrigger className="absolute top-[-65%] right-[0%]">
+              <Link href={`/view-details/${person.id}`}>
                 <SquareArrowOutUpRight className="w-4 h-4" />
               </Link>
             </TooltipTrigger>
