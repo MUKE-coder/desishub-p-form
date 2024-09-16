@@ -95,10 +95,10 @@ export async function fetchFormData() {
   }
 }
 
-export async function allFormData() {
+export async function allFormData(orderBy: 'createdAt' | 'updatedAt' = 'createdAt') {
   try {
     const fetchedFormData = await db.formData.findMany({
-      // orderBy: { createdAt: "desc" },
+      orderBy: { [orderBy]: "desc" },
       include: {
         User: true,
         Role: true,
