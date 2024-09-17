@@ -1,8 +1,6 @@
-import { getMembers } from "@/Actions/memberActions";
 import BoldHeading from "@/components/BoldHeading";
 import PerformanceTrackingForm from "@/components/PerformanceForm";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import Image from "next/image";
+import {ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
@@ -18,7 +16,7 @@ export default async function Home() {
       "
           href="/reports"
         >
-          <span>Table of Reports</span> <ArrowRight className="h-4 w-4" />
+          <span className="page-media">Table of Reports</span> <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
       <div className="text-center">
@@ -27,8 +25,7 @@ export default async function Home() {
       <div></div>
       <div className="py-8">
         <PerformanceTrackingForm />
-        <h2>hello world</h2>
-      </div>
+        </div>
     </main>
   );
 }

@@ -89,6 +89,18 @@
     padding-left: 1rem;
     max-width: 100%;
   }
+.tablecells{
+  width: 100%;
+}
+  .line-clamps{
+    display: none;
+    /* display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em; 
+    max-height: 6rem; 
+    white-space: normal; */
+  }
   .page-media {
     display: none;
   }

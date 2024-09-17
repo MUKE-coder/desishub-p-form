@@ -115,15 +115,15 @@ const finalMarkColor = finalMark >= 50 ? 'text-green-500' : 'text-red-500 '
            <table className="w-full bg-transparent">
              <thead className="bg-gray-100">
                <tr>
-                 <th className="py-3 lg:px-6 md:px-6 px-4 text-left text-xs font-medium uppercase tracking-wider text-gray-700">KPI Name</th>
-                 <th className="py-3 lg:px-6 md:px-6 px-4 text-left text-xs font-medium uppercase tracking-wider text-gray-700">Score</th>
+                 <th className="py-3 tablecells lg:px-6 md:px-6 px-4 text-left text-xs font-medium uppercase tracking-wider text-gray-700">KPI Name</th>
+                 <th className="py-3 lg:px-6 tablecells md:px-6 px-4 text-left text-xs font-medium uppercase tracking-wider text-gray-700">Score</th>
                </tr>
              </thead>
              <tbody className="bg-gray-50 divide-y divide-gray-200">
                {Object.entries(data.kpiScores as Record<string, string>).map(([name, score], index) => (
                  <tr key={index} className={index % 2 === 0 ? 'hover:bg-gray-100 transition-colors duration-200' : ''}>
-                   <td className="py-4 lg:px-6 md:px-6 px-4 text-sm font-medium text-gray-900">{name}</td>
-                   <td className="py-4 lg:px-6 md:px-6 px-4 text-sm text-gray-500">{score}</td>
+                   <td className="py-4 tablecells lg:px-6 md:px-6 px-4 text-sm font-medium text-gray-900">{name}</td>
+                   <td className="py-4 tablecells lg:px-6 md:px-6 px-4 text-sm text-gray-500">{score}</td>
                  </tr>
                ))}
              </tbody>
