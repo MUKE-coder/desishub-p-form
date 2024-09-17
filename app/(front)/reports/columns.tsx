@@ -49,6 +49,7 @@ const ActionsCell = ({ id }: { id: string }) => {
 
     console.log("Item deleted");
     setShowPopup(false);
+    router.push("/reports")
     router.refresh()
     window.location.reload();
   };

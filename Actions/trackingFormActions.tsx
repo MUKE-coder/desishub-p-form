@@ -138,7 +138,8 @@ export async function deleteData({id}:FormData | any){
     where:{
       id:id
     }
-   }) 
+   })
+   revalidatePath("/reports") 
   return deletedData
   } catch (error) {
     console.log(error)
