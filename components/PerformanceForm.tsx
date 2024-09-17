@@ -171,7 +171,7 @@ const PerformanceTrackingForm: React.FC = () => {
         toast.success("Report created successfully!");
         router.push("/reports");
         router.refresh();
-        window.location.reload();
+        // window.location.reload();
         setFormData({
           name: "",
           role: "",
