@@ -1,6 +1,7 @@
 "use server";
 import { db } from "@/lib/db";
 import { FormProps } from "@/types/nav";
+import { revalidatePath } from "next/cache";
 
 export async function createFormData(formData: FormProps) {
   try {
@@ -49,7 +50,8 @@ export async function createFormData(formData: FormProps) {
       },
     });
 
-    
+    revalidatePath("/")
+    revalidatePath("/reports")
     return { 
       success: true, 
       data: createdData,
