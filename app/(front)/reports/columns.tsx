@@ -1,25 +1,77 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import SortableColumn from "@/components/DataTableColumns/SortableColumn";
 import {
   PrinterIcon,
+  TrashIcon,
 } from "lucide-react";
 import Link from "next/link";
-
-
-const ActionsCell = ({ order }: { order: any }) => {
-  const editEndpoint = `orders/${order.orderNumber}`;
-
+import { Button } from "@/components/ui/button";
+import DeleteFn from "@/components/deleteFn";
+import { useRouter } from "next/navigation";
+ 
+function DeletePopup({onConfirm, onCancel, id }:any) {
+  
   return (
-    <Link href={editEndpoint} className="flex items-center gap-2">
-      <PrinterIcon className="w-4 h-4" />
-      <span>Print Voucher</span>
-    </Link>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="rounded-lg bg-white p-8 shadow-2xl">
+        <h2 className="text-lg font-bold">Are you sure you want to delete?</h2>
+
+        <p className="mt-2 text-sm text-gray-500">
+          This action cannot be undone. Are you sure you want to proceed?
+        </p>
+
+        <div className="mt-4 flex gap-2 justify-between">
+
+        <button
+            type="button"
+            className="rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+           <DeleteFn onConfirm={onConfirm} id={id}/>
+        </div>
+      </div>
+    </div>
   );
-};
+}
+
+const ActionsCell = ({ id }: { id: string }) => {
+  const router = useRouter()
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleDelete = () => {
+    // Implement delete logic here
+
+    console.log("Item deleted");
+    setShowPopup(false);
+    router.refresh()
+    window.location.reload();
+  };
+ 
+  return (
+    <>
+      <Button
+        onClick={() => setShowPopup(true)}
+        className="flex items-center gap-2 text-red-600"
+      >
+        <TrashIcon className="w-4 h-4" />
+        <span>Delete</span>
+      </Button>
+      {showPopup && (
+        <DeletePopup
+          onConfirm={handleDelete}
+          onCancel={() => setShowPopup(false)}
+          id={id}
+        />
+      )}
+    </>
+  );
+}
 
 const getAttendanceForDay = (person: any | any[], day: string) => {
   const checkAttendance = (item: any) => item.day.toLowerCase() === day.toLowerCase();
@@ -40,7 +92,7 @@ const getAttendanceForDay = (person: any | any[], day: string) => {
 
   return (
     <div>
-      <span className="text-red-400 text-sm">No Report</span>
+      <span className="text-red-400 text-sm">------</span>
     </div>
   );
 };
@@ -100,10 +152,10 @@ export const columns: ColumnDef<any>[] = [
     header: ({ column }) => <SortableColumn column={column} title="Friday" />,
     cell: ({ row }) => getAttendanceForDay(row.original.reports || row.original, "Friday"),
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }: any) => <ActionsCell order={row.original} />,
-  // },
+  {
+    id: "actions",
+    cell: ({ row }: any) => <ActionsCell id={row.original.id} />,
+  },
 ];
 
 const EnhancedWeeklyAttendanceTable = ({ data }: any) => {

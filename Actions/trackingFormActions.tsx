@@ -49,7 +49,7 @@ export async function createFormData(formData: FormProps) {
       },
     });
 
-    console.log("Created data:", createdData);
+    
     return { 
       success: true, 
       data: createdData,
@@ -125,6 +125,19 @@ export async function getSingleData({id}:FormData | any){
    }) 
 
   return fetchedData
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function deleteData({id}:FormData | any){
+  try {
+   const deletedData = await db.formData.delete({
+    where:{
+      id:id
+    }
+   }) 
+  return deletedData
   } catch (error) {
     console.log(error)
   }

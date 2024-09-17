@@ -20,13 +20,13 @@ import { getRoles } from "@/Actions/roleActions";
 import { createFormData } from "@/Actions/trackingFormActions";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface KPI {
   name: string;
   explanation: string;
   example: string;
 }
-
 
 interface FormData {
   name: string;
@@ -38,7 +38,7 @@ interface FormData {
   timeOut: string;
   notes: string;
   userId: string;
-  roleId: string
+  roleId: string;
 }
 
 const kpis: KPI[] = [
@@ -99,8 +99,6 @@ const kpis: KPI[] = [
   },
 ];
 
-
-
 const PerformanceTrackingForm: React.FC = () => {
   const componentRef = useRef<HTMLDivElement>(null);
   const today = new Date();
@@ -110,18 +108,18 @@ const PerformanceTrackingForm: React.FC = () => {
     month: "long",
     day: "numeric",
   });
-
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     role: "",
-    day:"",
+    day: "",
     kpiScores: {},
     attendance: false,
     timeIn: "",
     timeOut: "",
     notes: "",
-    userId:"",
-    roleId:""
+    userId: "",
+    roleId: "",
   });
 
   const handleInputChange = (
@@ -137,29 +135,42 @@ const PerformanceTrackingForm: React.FC = () => {
       kpiScores: { ...prevState.kpiScores, [kpi]: value },
     }));
   };
-  const [loading,setLoading] = useState(false)
-  const [formErr,setFormErr] = useState("")
-  const  handleSubmit = async () => {
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const [loading, setLoading] = useState(false);
+  const [formErr, setFormErr] = useState("");
+  const handleSubmit = async () => {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     const today = new Date();
     const dayName = daysOfWeek[today.getDay()];
-    
-  
-    formData.name = selectedMember.label
-    formData.role = selectedRole.label
-    formData.userId =selectedMember.value
-    formData.roleId = selectedRole.value
-    formData.day =dayName
-   
+
+    formData.name = selectedMember.label;
+    formData.role = selectedRole.label;
+    formData.userId = selectedMember.value;
+    formData.roleId = selectedRole.value;
+    formData.day = dayName;
+
     try {
-      setLoading(true)
-     const res = await createFormData(formData)
-      if(res && res.status===409){
-        toast.error("Report with this name was already created today. Check your records!")
-        setFormErr("Report with this name was already created today. Check your records!")
+      setLoading(true);
+      const res = await createFormData(formData);
+      if (res && res.status === 409) {
+        toast.error(
+          "Report with this name was already created today. Check your records!"
+        );
+        setFormErr(
+          "Report with this name was already created today. Check your records!"
+        );
         setSelectedMember("");
-      } else if(res && res.status===201){
-        toast.success("Report created successfully!"); 
+      } else if (res && res.status === 201) {
+        toast.success("Report created successfully!");
+        router.push("/reports");
+        router.refresh();
         setFormData({
           name: "",
           role: "",
@@ -170,14 +181,15 @@ const PerformanceTrackingForm: React.FC = () => {
           timeOut: "",
           notes: "",
           userId: "",
-          roleId: ""
+          roleId: "",
         });
         setSelectedMember("");
         setSelectedRole("");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("failed to create the report. Please try again.");
+
       setFormData({
         name: "",
         role: "",
@@ -188,55 +200,51 @@ const PerformanceTrackingForm: React.FC = () => {
         timeOut: "",
         notes: "",
         userId: "",
-        roleId: ""
+        roleId: "",
       });
       setSelectedMember("");
-      setSelectedRole(""); 
-    }finally{
-      setLoading(false)
+      setSelectedRole("");
+    } finally {
+      setLoading(false);
     }
   };
-  
-  
+
   const [selectedMember, setSelectedMember] = useState<any>("");
   const [members, setMembers] = useState<any>([]);
   useEffect(() => {
     async function fetchMembers() {
       const fetchedMembers = await getMembers();
-     
+
       if (fetchedMembers) {
         setMembers(fetchedMembers);
-        
       }
     }
     fetchMembers();
   }, []);
 
-  const selectUser = members.map((member:any) => ({
+  const selectUser = members.map((member: any) => ({
     value: member.id,
     label: member.name, // Assuming the user object has a 'name' field
   }));
 
-const [roles, setRoles] = useState<any>([])
-const [selectedRole, setSelectedRole] = useState<any>("");
-useEffect(()=>{
-  async function fetchRoles(){
-    const fetchedRoles = await getRoles()
-    // console.log(fetchedRoles)
-    if(Array.isArray(fetchedRoles) && fetchedRoles.length > 0){
-      setRoles(fetchedRoles)
+  const [roles, setRoles] = useState<any>([]);
+  const [selectedRole, setSelectedRole] = useState<any>("");
+  useEffect(() => {
+    async function fetchRoles() {
+      const fetchedRoles = await getRoles();
       // console.log(fetchedRoles)
+      if (Array.isArray(fetchedRoles) && fetchedRoles.length > 0) {
+        setRoles(fetchedRoles);
+        // console.log(fetchedRoles)
+      }
     }
-  }
-fetchRoles()
-}, [])
+    fetchRoles();
+  }, []);
 
-const selectRole = roles.map((role: any) => ({
-  value: role.id, 
-  label: role.name, 
-}));
-
-
+  const selectRole = roles.map((role: any) => ({
+    value: role.id,
+    label: role.name,
+  }));
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -244,7 +252,7 @@ const selectRole = roles.map((role: any) => ({
   });
 
   return (
-    <div className="container container-media lg:mx-auto md:mx-0 mx-0 lg:p-6 md:p-4 p-2 lg:max-w-6xl md:max-w-full max-w-full">
+    <div className="container container-media lg:mx-auto md:mx-0 mx-0 lg:p-6 md:p-4 p-2 lg:max-w-6xl md:max-w-screen-2xl max-w-screen-2xl">
       <div
         id="performanceForm"
         ref={componentRef}
@@ -259,28 +267,27 @@ const selectRole = roles.map((role: any) => ({
 
         <div className="grid lg:grid-cols-2 md:grid-cols-1 grid-cols-1 gap-6 mb-6">
           <div>
-               <FormSelectInput
-     label="name"
-    
-     options={selectUser}
-     option={selectedMember}
-     setOption={setSelectedMember}
-     toolTipText="Add New member"
-     href="/add-user"
-   />
-    {formErr && (
+            <FormSelectInput
+              label="name"
+              options={selectUser}
+              option={selectedMember}
+              setOption={setSelectedMember}
+              toolTipText="Add New member"
+              href="/add-user"
+            />
+            {formErr && (
               <span className="text-xs my-2 text-red-600">{formErr}</span>
-          )}
+            )}
           </div>
           <div>
-       <FormSelectInput
-     label="role"
-     options={selectRole}
-     option={selectedRole}
-     setOption={setSelectedRole}
-     toolTipText="Add New Role"
-     href="/add-role"
-   />
+            <FormSelectInput
+              label="role"
+              options={selectRole}
+              option={selectedRole}
+              setOption={setSelectedRole}
+              toolTipText="Add New Role"
+              href="/add-role"
+            />
           </div>
         </div>
 
@@ -292,27 +299,36 @@ const selectRole = roles.map((role: any) => ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-1/5">Metric</TableHead>
-                <TableHead className="w-1/3">Explanation</TableHead>
-                <TableHead className="w-1/3">Example</TableHead>
-                <TableHead className="w-1/10">Score</TableHead>
+                <TableHead className="w-1/5 tablecells">Metric</TableHead>
+                <TableHead className="w-1/3 page-media">Explanation</TableHead>
+                <TableHead className="w-1/3 line-clamps">Example</TableHead>
+                <TableHead className="w-1/10 tablecells">Score</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {kpis.map((kpi, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{kpi.name}</TableCell>
-                  <TableCell>{kpi.explanation}</TableCell>
-                  <TableCell>{kpi.example}</TableCell>
-                  <TableCell>
+                  <TableCell className="page-media">
+                    {kpi.explanation}
+                  </TableCell>
+                  <TableCell className="line-clamps">{kpi.example}</TableCell>
+                  <TableCell className="tablecells">
                     <Input
                       type="number"
                       min="1"
                       max="5"
                       value={formData.kpiScores[kpi.name] || ""}
-                      onChange={(e) =>
-                        handleKPIChange(kpi.name, e.target.value)
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (
+                          value === "" ||
+                          (Number(value) >= 1 && Number(value) <= 5)
+                        ) {
+                          handleKPIChange(kpi.name, value);
+                        }
+                      }}
                       placeholder="1-5"
                       className="w-16"
                     />
@@ -375,13 +391,20 @@ const selectRole = roles.map((role: any) => ({
       </div>
 
       <div className="flex justify-between mt-6">
-        {
-          loading ?( <Button disabled onClick={handleSubmit} className="w-1/2 mr-2 flex gap-2 items-center">
-           <Loader className="animate-spin"/><span> Submiting...</span>
-        </Button>) : (<Button onClick={handleSubmit} className="w-1/2 mr-2">
-          Submit
-        </Button>)
-        }
+        {loading ? (
+          <Button
+            disabled
+            onClick={handleSubmit}
+            className="w-1/2 mr-2 flex gap-2 items-center"
+          >
+            <Loader className="animate-spin" />
+            <span> Submiting...</span>
+          </Button>
+        ) : (
+          <Button onClick={handleSubmit} className="w-1/2 mr-2">
+            Submit
+          </Button>
+        )}
         <Button onClick={handlePrint} className="w-1/2 ml-2" variant="outline">
           Download PDF
         </Button>
@@ -390,4 +413,4 @@ const selectRole = roles.map((role: any) => ({
   );
 };
 
-export default  PerformanceTrackingForm;
+export default PerformanceTrackingForm;
